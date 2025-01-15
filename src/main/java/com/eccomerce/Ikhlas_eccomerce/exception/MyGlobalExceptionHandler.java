@@ -1,5 +1,6 @@
 package com.eccomerce.Ikhlas_eccomerce.exception;
 
+import com.eccomerce.Ikhlas_eccomerce.payload.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,14 +28,16 @@ public class MyGlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = { ResourceNotFoundException.class })
-    public ResponseEntity<String> myResourceNotFoundException(ResourceNotFoundException e) {
+    public ResponseEntity<ApiResponse> myResourceNotFoundException(ResourceNotFoundException e) {
     String message = e.getMessage();
-    return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    ApiResponse apiResponse = new ApiResponse(message, false);
+    return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = { ApiExceptions.class })
-    public ResponseEntity<String> ApiExceptions(ApiExceptions e) {
+    public ResponseEntity<ApiResponse> ApiExceptions(ApiExceptions e) {
         String message = e.getMessage();
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        ApiResponse apiResponse = new ApiResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 }

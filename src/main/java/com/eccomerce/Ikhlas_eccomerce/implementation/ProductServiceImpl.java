@@ -2,6 +2,7 @@ package com.eccomerce.Ikhlas_eccomerce.implementation;
 
 import com.eccomerce.Ikhlas_eccomerce.Repository.CategoryRepository;
 import com.eccomerce.Ikhlas_eccomerce.Repository.ProductRepository;
+import com.eccomerce.Ikhlas_eccomerce.exception.ApiExceptions;
 import com.eccomerce.Ikhlas_eccomerce.exception.ResourceNotFoundException;
 import com.eccomerce.Ikhlas_eccomerce.model.Category;
 import com.eccomerce.Ikhlas_eccomerce.model.Product;
@@ -71,9 +72,9 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-//        if (products.isEmpty()){
-//            throw new ApiExceptions("No Products Exist!!");
-//        }
+        if (products.isEmpty()){
+            throw new ApiExceptions("No Products Exist!!");
+        }
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
@@ -104,20 +105,41 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
+//        if (products.isEmpty()){
+//            throw new ApiExceptions("No Products Exist!!");
+//        }
+
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(pageProducts.getNumber());
+        productResponse.setPageSize(pageProducts.getSize());
+        productResponse.setTotalElements(pageProducts.getTotalElements());
+        productResponse.setTotalPages(pageProducts.getTotalPages());
+        productResponse.setLastPage(pageProducts.isLast());
         return productResponse;
     }
 
     @Override
     public ProductResponse searchProductByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        List<Product> products = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%');
+
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Product> pageProducts = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageDetails);
+
+        List<Product> products = pageProducts.getContent();
         List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(pageProducts.getNumber());
+        productResponse.setPageSize(pageProducts.getSize());
+        productResponse.setTotalElements(pageProducts.getTotalElements());
+        productResponse.setTotalPages(pageProducts.getTotalPages());
+        productResponse.setLastPage(pageProducts.isLast());
         return productResponse;
     }
 

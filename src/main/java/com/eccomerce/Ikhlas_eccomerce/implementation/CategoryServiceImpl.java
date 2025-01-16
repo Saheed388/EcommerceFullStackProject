@@ -1,4 +1,4 @@
-package com.eccomerce.Ikhlas_eccomerce.implemwntation;
+package com.eccomerce.Ikhlas_eccomerce.implementation;
 
 import com.eccomerce.Ikhlas_eccomerce.Repository.CategoryRepository;
 import com.eccomerce.Ikhlas_eccomerce.exception.ApiExceptions;
@@ -13,13 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -28,6 +24,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+
 
     @Override
     public CategoryResponse getAllCategory(Integer pageNumber, Integer pageSize,  String sortBy, String sortOrder) {

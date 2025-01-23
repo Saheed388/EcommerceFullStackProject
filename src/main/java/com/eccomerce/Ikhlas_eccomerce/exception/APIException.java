@@ -1,12 +1,12 @@
 package com.eccomerce.Ikhlas_eccomerce.exception;
 
-public class ApiExceptions extends RuntimeException {
+public class APIException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public ApiExceptions() {
+    public APIException() {
     }
 
-    public ApiExceptions(String message) {
+    public APIException(String message) {
         super(message);
     }
 }

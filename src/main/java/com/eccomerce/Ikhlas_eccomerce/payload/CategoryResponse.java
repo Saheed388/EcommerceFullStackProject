@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryResponse {
     private List<CategoryDTO> content;
     private Integer pageNumber;

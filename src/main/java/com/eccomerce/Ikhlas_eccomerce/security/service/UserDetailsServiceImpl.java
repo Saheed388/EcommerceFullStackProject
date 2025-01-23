@@ -1,6 +1,9 @@
 package com.eccomerce.Ikhlas_eccomerce.security.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eccomerce.Ikhlas_eccomerce.model.User;
-import com.eccomerce.Ikhlas_eccomerce.Repository.UserRepository;
+import com.eccomerce.Ikhlas_eccomerce.repository.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

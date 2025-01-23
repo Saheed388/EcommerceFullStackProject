@@ -1,7 +1,7 @@
 package com.eccomerce.Ikhlas_eccomerce.Controller;
 
-import com.eccomerce.Ikhlas_eccomerce.Repository.RoleRepository;
-import com.eccomerce.Ikhlas_eccomerce.Repository.UserRepository;
+import com.eccomerce.Ikhlas_eccomerce.repository.RoleRepository;
+import com.eccomerce.Ikhlas_eccomerce.repository.UserRepository;
 import com.eccomerce.Ikhlas_eccomerce.model.AppRole;
 import com.eccomerce.Ikhlas_eccomerce.model.User;
 
@@ -27,14 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/auth")

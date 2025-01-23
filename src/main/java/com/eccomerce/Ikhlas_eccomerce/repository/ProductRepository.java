@@ -1,4 +1,4 @@
-package com.eccomerce.Ikhlas_eccomerce.Repository;
+package com.eccomerce.Ikhlas_eccomerce.repository;
 
 import com.eccomerce.Ikhlas_eccomerce.model.Category;
 import com.eccomerce.Ikhlas_eccomerce.model.Product;

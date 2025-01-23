@@ -1,24 +1,26 @@
 package com.eccomerce.Ikhlas_eccomerce.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "roles")
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name = "roles")
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( name = "role_Id")
+    @Column(name = "role_id")
     private Integer roleId;
 
     @ToString.Exclude
-    @Enumerated(EnumType.STRING)//Tp make it persist as a string
+    @Enumerated(EnumType.STRING)
     @Column(length = 20, name = "role_name")
     private AppRole roleName;
 

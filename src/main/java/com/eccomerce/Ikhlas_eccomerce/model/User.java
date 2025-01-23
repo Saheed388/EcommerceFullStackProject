@@ -11,14 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = "userName"),
-                @UniqueConstraint(columnNames = "email")})
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class User {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "userName")
+    @Column(name = "username")
     private String userName;
 
     @NotBlank
@@ -37,8 +37,7 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(max = 140)
-    @ToString.Exclude
+    @Size(max = 120)
     @Column(name = "password")
     private String password;
 
@@ -48,6 +47,8 @@ public class User {
         this.password = password;
     }
 
+    @Setter
+    @Getter
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -55,6 +56,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Getter
+    @Setter
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_address",
             joinColumns = @JoinColumn(name = "user_id"),

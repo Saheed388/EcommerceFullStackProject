@@ -3,19 +3,21 @@ package com.eccomerce.Ikhlas_eccomerce.implementation;
 import com.eccomerce.Ikhlas_eccomerce.exception.APIException;
 import com.eccomerce.Ikhlas_eccomerce.exception.ResourceNotFoundException;
 import com.eccomerce.Ikhlas_eccomerce.model.Cart;
-import com.eccomerce.Ikhlas_eccomerce.model.CartItems;
+import com.eccomerce.Ikhlas_eccomerce.model.CartItem;
 import com.eccomerce.Ikhlas_eccomerce.model.Product;
 import com.eccomerce.Ikhlas_eccomerce.payload.CartDTO;
 import com.eccomerce.Ikhlas_eccomerce.payload.ProductDTO;
 import com.eccomerce.Ikhlas_eccomerce.repository.CartItemsRepository;
 import com.eccomerce.Ikhlas_eccomerce.repository.CartRepository;
 import com.eccomerce.Ikhlas_eccomerce.repository.ProductRepository;
+import com.eccomerce.Ikhlas_eccomerce.security.util.AuthUtil;
 import com.eccomerce.Ikhlas_eccomerce.service.CartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -43,7 +45,7 @@ public class CartServiceImpl implements CartService{
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
-        CartItems cartItem = cartItemRepository.findCartItemByProductIdAndCartId(cart.getCartId(), productId);
+        CartItem cartItem = cartItemRepository.findCartItemByProductIdAndCartId(cart.getCartId(), productId);
 
         if (cartItem != null) {
             throw new APIException("Product " + product.getProductName() + " already exists in the cart");
@@ -58,7 +60,7 @@ public class CartServiceImpl implements CartService{
                     + " less than or equal to the quantity " + product.getQuantity() + ".");
         }
 
-        CartItems newCartItem = new CartItems();
+        CartItem newCartItem = new CartItem();
 
         newCartItem.setProduct(product);
         newCartItem.setCart(cart);
@@ -76,7 +78,7 @@ public class CartServiceImpl implements CartService{
 
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
 
-        List<CartItems> cartItems = cart.getCartItems();
+        List<CartItem> cartItems = cart.getCartItems();
 
         Stream<ProductDTO> productStream = cartItems.stream().map(item -> {
             ProductDTO map = modelMapper.map(item.getProduct(), ProductDTO.class);
@@ -85,6 +87,45 @@ public class CartServiceImpl implements CartService{
         });
 
         cartDTO.setProducts(productStream.toList());
+
+        return cartDTO;
+    }
+
+    @Override
+    public List<CartDTO> getAllCarts() {
+        List<Cart> carts = cartRepository.findAll();
+
+        if (carts.size() == 0) {
+            throw new APIException("No cart exists");
+        }
+
+        List<CartDTO> cartDTOs = carts.stream().map(cart -> {
+            CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+
+            List<ProductDTO> products = cart.getCartItems().stream()
+                    .map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)).collect(Collectors.toList());
+
+            cartDTO.setProducts(products);
+
+            return cartDTO;
+
+        }).collect(Collectors.toList());
+
+        return cartDTOs;
+    }
+
+    @Override
+    public CartDTO getCart(String emailId, Long cartId) {
+        Cart cart = cartRepository.findCartByEmailAndCartId(emailId, cartId);
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart", "cartId", cartId);
+        }
+        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+        cart.getCartItems().forEach(c -> c.getProduct().setQuantity(c.getQuantity()));
+        List<ProductDTO> products = cart.getCartItems()
+                .stream().map(p -> modelMapper.map(p.getProduct(), ProductDTO.class)
+                ).toList();
+        cartDTO.setProducts(products);
 
         return cartDTO;
     }
